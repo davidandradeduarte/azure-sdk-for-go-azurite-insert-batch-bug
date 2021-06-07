@@ -49,6 +49,10 @@ For Go see [main.go](go-sdk/XXX/main.go):
 func main(){
     insertBatch()
 }
+
+func insertBatch(){
+    // not working - inserts only one of the two entities added to the batch
+}
 ```
 
 For C# see [Program.cs](dotnet-sdk/XXX/Program.cs):
