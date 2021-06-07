@@ -41,7 +41,7 @@ private static void InsertBatch(){
 
 ## Batch insert with Go SDK (using Azurite) only inserts one record
 
-[**Github issue**](https://github.com/Azure/Azurite/issues/14750)
+[**Github issue**](https://github.com/Azure/azure-sdk-for-go/issues/14750)
 
 For Go see [main.go](go-sdk/14750/main.go):
 
