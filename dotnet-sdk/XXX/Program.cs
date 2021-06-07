@@ -10,42 +10,9 @@ namespace play
     {
         static void Main(string[] args)
         {
-            Insert();
             InsertBatch();
         }
-        
-        private static void Insert()
-        {
-            const string tableName = "InsertTestTable";
-            var client = new TableClient(
-                "UseDevelopmentStorage=true;",
-                tableName);
 
-            const string partitionKey = "InsertSample";
-            var entity = new TableEntity(partitionKey, "01")
-            {
-                { "Product", "Marker Set" },
-                { "Price", 5.00 },
-                { "Quantity", 21 }
-            };
-
-            try
-            {
-                client.AddEntity(entity);
-            }
-            catch (RequestFailedException e)
-            when(e.Status == 404 && e.ErrorCode == "TableNotFound")
-            {
-                // create table 
-                client.Create();
-                
-                // retry
-                client.AddEntity(entity);
-            }
-            
-            Console.WriteLine("Inserted! ");
-        }
-        
         private static void InsertBatch()
         {
             const string tableName = "InsertBatchTestTable";
@@ -89,22 +56,33 @@ namespace play
             addEntitiesBatch.AddRange(entityList.Select(e =>
                 new TableTransactionAction(TableTransactionActionType.Add, e)));
 
+            // Create table beforehand
+            client.Create();
+
             try
             {
                 // Submit the batch.
                 client.SubmitTransaction(addEntitiesBatch);
             }
             catch (RequestFailedException e)
-                when(e.Status == 404 && e.ErrorCode == "TableNotFound")
+                when (e.Status == 404 && e.ErrorCode == "TableNotFound")
             {
                 // create table 
                 client.Create();
-                
+
                 // retry
                 client.SubmitTransaction(addEntitiesBatch);
             }
-            
-            Console.WriteLine("Inserted! ");
+
+            Console.WriteLine("Inserted!");
+
+            var entities = client.Query<TableEntity>();
+
+            Console.WriteLine($"Number of records: {entities.Count()}");
+            foreach (var entity in entities)
+            {
+                Console.WriteLine($"{entity.PartitionKey}:{entity.RowKey}");
+            }
         }
     }
 }
