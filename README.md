@@ -1,4 +1,4 @@
-# Reproducing a bug in Azure Go's SDK with Azurite when inserting in batch mode to a non-existing table
+# Reproducing a bug in Azurite when inserting in batch mode into a non-existing table
 
 [Github issue link](https://github.com/Azure/Azurite/issues/814)
 
