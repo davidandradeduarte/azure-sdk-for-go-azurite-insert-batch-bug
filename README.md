@@ -2,7 +2,7 @@
 
 [Github issue link](https://github.com/Azure/Azurite/issues/814)
 
-For Go see [main.go](main.go):
+For Go see [main.go](go-sdk/main.go):
 ```golang
 func main(){
     insert()
@@ -18,7 +18,7 @@ func insertBatch(){
 }
 ```
 
-For C# see [Program.cs](Program.cs):
+For C# see [Program.cs](dotnet-sdk/Program.cs):
 ```csharp
 private static void Insert(){
     // working - error is 404 TableNotFound, as expected
