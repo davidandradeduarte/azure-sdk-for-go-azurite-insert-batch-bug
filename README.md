@@ -1,9 +1,8 @@
 # Reproducing a bug in Azure Go's SDK with Azurite when inserting in batch mode to a non-existing table
 
-[Github issue link](https://github.com/Azure/azure-sdk-for-go/issues/14746)
+[Github issue link](https://github.com/Azure/Azurite/issues/814)
 
-See [main.go](main.go):
-
+For Go see [main.go](main.go):
 ```golang
 func main(){
     insert()
@@ -11,10 +10,21 @@ func main(){
 }
 
 func insert(){
-    // working, status code is TableNotFound as expected
+    // working - error is 404 TableNotFound, as expected
 }
 
 func insertBatch(){
-    // not working, returns a EOF string error
+    // not working - returns a EOF string error
+}
+```
+
+For C# see [Program.cs](Program.cs):
+```csharp
+private static void Insert(){
+    // working - error is 404 TableNotFound, as expected
+}
+
+private static void InserBatcht(){
+    // not working - returns System.IO.InvalidDataException: Invalid header line: HTTP/1.1 400 Bad Request
 }
 ```
