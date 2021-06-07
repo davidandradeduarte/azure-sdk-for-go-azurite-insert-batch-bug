@@ -2,7 +2,7 @@
 
 ## Batch insert into a non-existing table returns unexpected error
 
-[Github issue link](https://github.com/Azure/Azurite/issues/814)
+[**Github issue**](https://github.com/Azure/Azurite/issues/814)
 
 For Go see [main.go](go-sdk/814/main.go):
 
@@ -41,9 +41,9 @@ private static void InsertBatch(){
 
 ## Batch insert with Go SDK (using Azurite) only inserts one record
 
-[Github issue link](https://github.com/Azure/Azurite/issues/XXX)
+[**Github issue**](https://github.com/Azure/Azurite/issues/14750)
 
-For Go see [main.go](go-sdk/XXX/main.go):
+For Go see [main.go](go-sdk/14750/main.go):
 
 ```golang
 func main(){
@@ -55,7 +55,7 @@ func insertBatch(){
 }
 ```
 
-For C# see [Program.cs](dotnet-sdk/XXX/Program.cs):
+For C# see [Program.cs](dotnet-sdk/14750/Program.cs):
 
 ```csharp
 static void Main(string[] args)
