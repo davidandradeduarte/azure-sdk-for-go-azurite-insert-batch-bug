@@ -10,15 +10,16 @@ import (
 	"github.com/Azure/go-autorest/autorest/to"
 )
 
-func main() {
-	insertBatch()
-	query()
-	//execWithConnectionString()
-}
+func execWithConnectionString() {
+	insertBatchWithConnectionString()
+	queryBatchWithConnectionString()
 
-func insertBatch() {
-	client, err := aztables.NewClientWithNoCredential("http://localhost:10002/TestTable", nil)
+}
+func insertBatchWithConnectionString() {
+	sc, err := aztables.NewServiceClientFromConnectionString("DefaultEndpointsProtocol=http;AccountName=dummyaccountname;AccountKey=secretkeykey;TableEndpoint=http://localhost:10002/TestTable;", nil)
 	handle(err)
+	client := sc.NewClient("TestTable")
+
 	_, err = client.Create(context.Background(), nil)
 	handle(err)
 
@@ -44,9 +45,11 @@ func insertBatch() {
 	handle(err)
 }
 
-func query() {
-	client, err := aztables.NewClientWithNoCredential("http://0.0.0.0:10002", nil)
+func queryBatchWithConnectionString() {
+	sc, err := aztables.NewServiceClientFromConnectionString("DefaultEndpointsProtocol=http;AccountName=dummyaccountname;AccountKey=secretkeykey;TableEndpoint=http://localhost:10002/TestTable;", nil)
 	handle(err)
+	client := sc.NewClient("TestTable")
+
 	filter := "PartitionKey eq 'markers' or RowKey eq 'id-003'"
 	options := &aztables.ListEntitiesOptions{
 		Filter: &filter,
@@ -70,10 +73,4 @@ func query() {
 
 	err = pager.Err()
 	handle(err)
-}
-
-func handle(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
