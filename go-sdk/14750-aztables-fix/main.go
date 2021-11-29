@@ -11,9 +11,9 @@ import (
 )
 
 func main() {
-	insertBatch()
-	query()
-	//execWithConnectionString()
+	// insertBatch()
+	// query()
+	execWithConnectionString()
 }
 
 func insertBatch() {
