@@ -20,8 +20,8 @@ func insertBatchWithConnectionString() {
 	client := sc.NewClient("TestTable")
 
 	// assuming table is not created
-	// _, err = client.Create(context.Background(), nil)
-	// handle(err)
+	_, err = client.Create(context.Background(), nil)
+	handle(err)
 
 	entity := aztables.EDMEntity{
 		Entity: aztables.Entity{
