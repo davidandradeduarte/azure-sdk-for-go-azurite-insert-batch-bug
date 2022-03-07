@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/data/aztables"
 	"github.com/Azure/go-autorest/autorest/to"
@@ -21,36 +20,28 @@ func insertBatchWithConnectionString() {
 	client := sc.NewClient("TestTable")
 
 	// assuming table is not created
-	_, err = client.Create(context.Background(), nil)
-	handle(err)
+	// _, err = client.Create(context.Background(), nil)
+	// handle(err)
 
 	entity := aztables.EDMEntity{
 		Entity: aztables.Entity{
-			PartitionKey: "pencils",
-			RowKey:       "id-003",
+			PartitionKey: "pkey",
+			RowKey:       "rkey1",
 		},
 		Properties: map[string]interface{}{
-			"Product":      "Ticonderoga Pencils",
-			"Price":        5.00,
-			"Count":        aztables.EDMInt64(12345678901234),
-			"ProductGUID":  aztables.EDMGUID("some-guid-value"),
-			"DateReceived": aztables.EDMDateTime(time.Now()),
-			"ProductCode":  aztables.EDMBinary([]byte("somebinaryvalue")),
+			"product": "product1",
+			"price":   5.00,
 		},
 	}
 
 	entity2 := aztables.EDMEntity{
 		Entity: aztables.Entity{
-			PartitionKey: "pencils",
-			RowKey:       "id-003",
+			PartitionKey: "pkey",
+			RowKey:       "rkey2",
 		},
 		Properties: map[string]interface{}{
-			"Product":      "Ticonderoga Pencils",
-			"Price":        5.00,
-			"Count":        aztables.EDMInt64(12345678901234),
-			"ProductGUID":  aztables.EDMGUID("some-guid-value"),
-			"DateReceived": aztables.EDMDateTime(time.Now()),
-			"ProductCode":  aztables.EDMBinary([]byte("somebinaryvalue")),
+			"product": "product2",
+			"price":   10.00,
 		},
 	}
 
@@ -63,12 +54,12 @@ func insertBatchWithConnectionString() {
 	handle(err)
 
 	batch = append(batch, aztables.TransactionAction{
-		ActionType: aztables.InsertMerge,
+		ActionType: aztables.Add,
 		Entity:     e1,
 	})
 
 	batch = append(batch, aztables.TransactionAction{
-		ActionType: aztables.InsertMerge,
+		ActionType: aztables.Add,
 		Entity:     e2,
 	})
 
