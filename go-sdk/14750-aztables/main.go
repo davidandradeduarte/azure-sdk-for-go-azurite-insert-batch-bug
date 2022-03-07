@@ -15,8 +15,8 @@ import (
 
 func main() {
 	// add()
-	// insertBatch()
-	query()
+	insertBatch()
+	// query()
 }
 
 func add() {
@@ -95,7 +95,6 @@ func generateEntities() [][]byte {
 		},
 		Properties: map[string]interface{}{
 			"product": "product1",
-			"price":   5.00,
 		},
 	})
 
@@ -105,8 +104,7 @@ func generateEntities() [][]byte {
 			RowKey:       "rkey2",
 		},
 		Properties: map[string]interface{}{
-			"product": "product1",
-			"price":   5.00,
+			"product": "product2",
 		},
 	})
 

@@ -23,30 +23,14 @@ namespace play
             const string partitionKey = "BatchInsertSample";
             var entityList = new List<TableEntity>
             {
-                new(partitionKey, "01")
+                new(partitionKey, "rkey1")
                 {
-                    {"Product", "Marker"},
-                    {"Price", 5.00},
-                    {"Brand", "Premium"}
+                    {"product", "product1"},
                 },
-                new(partitionKey, "02")
+                new(partitionKey, "rkey2")
                 {
-                    {"Product", "Pen"},
-                    {"Price", 3.00},
-                    {"Brand", "Premium"}
-                },
-                new(partitionKey, "03")
-                {
-                    {"Product", "Paper"},
-                    {"Price", 0.10},
-                    {"Brand", "Premium"}
-                },
-                new(partitionKey, "04")
-                {
-                    {"Product", "Glue"},
-                    {"Price", 1.00},
-                    {"Brand", "Generic"}
-                },
+                    {"product", "product2"},
+                }
             };
 
             // Create the batch.
