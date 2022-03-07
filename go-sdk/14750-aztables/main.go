@@ -21,115 +21,47 @@ func main() {
 
 func add() {
 	sc, err := aztables.NewServiceClientFromConnectionString("DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;", nil)
-	handle(err)
+	handleErr(err)
 	client := sc.NewClient("TestTable")
 
-	// assuming table is not created
 	_, err = client.Create(context.Background(), nil)
 	if !tableExists(err) {
-		handle(err)
+		handleErr(err)
 	}
 
-	uuid := generateUuid()
-
-	entity := aztables.EDMEntity{
-		Entity: aztables.Entity{
-			PartitionKey: uuid,
-			RowKey:       "rkey1",
-		},
-		Properties: map[string]interface{}{
-			"product": "product1",
-			"price":   5.00,
-		},
+	for _, v := range generateEntities() {
+		resp, err := client.AddEntity(context.Background(), v, nil)
+		handleErr(err)
+		fmt.Println(resp)
 	}
-
-	entity2 := aztables.EDMEntity{
-		Entity: aztables.Entity{
-			PartitionKey: uuid,
-			RowKey:       "rkey2",
-		},
-		Properties: map[string]interface{}{
-			"product": "product1",
-			"price":   5.00,
-		},
-	}
-
-	e1, err := json.Marshal(entity)
-	handle(err)
-
-	resp, err := client.AddEntity(context.Background(), e1, nil)
-	handle(err)
-	fmt.Println(resp)
-
-	e2, err := json.Marshal(entity2)
-	handle(err)
-
-	resp, err = client.AddEntity(context.Background(), e2, nil)
-	handle(err)
-	fmt.Println(resp)
 }
 
 func insertBatch() {
 	sc, err := aztables.NewServiceClientFromConnectionString("DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;", nil)
-	handle(err)
+	handleErr(err)
 	client := sc.NewClient("TestTable")
 
-	// assuming table is not created
 	_, err = client.Create(context.Background(), nil)
 	if !tableExists(err) {
-		handle(err)
-	}
-
-	uuid := generateUuid()
-
-	entity := aztables.EDMEntity{
-		Entity: aztables.Entity{
-			PartitionKey: uuid,
-			RowKey:       "rkey1",
-		},
-		Properties: map[string]interface{}{
-			"product": "product1",
-			"price":   5.00,
-		},
-	}
-
-	entity2 := aztables.EDMEntity{
-		Entity: aztables.Entity{
-			PartitionKey: uuid,
-			RowKey:       "rkey2",
-		},
-		Properties: map[string]interface{}{
-			"product": "product2",
-			"price":   10.00,
-		},
+		handleErr(err)
 	}
 
 	var batch []aztables.TransactionAction
-
-	e1, err := json.Marshal(entity)
-	handle(err)
-
-	e2, err := json.Marshal(entity2)
-	handle(err)
-
-	batch = append(batch, aztables.TransactionAction{
-		ActionType: aztables.Add,
-		Entity:     e1,
-	})
-
-	batch = append(batch, aztables.TransactionAction{
-		ActionType: aztables.Add,
-		Entity:     e2,
-	})
+	for _, v := range generateEntities() {
+		batch = append(batch, aztables.TransactionAction{
+			ActionType: aztables.Add,
+			Entity:     v,
+		})
+	}
 
 	resp, err := client.SubmitTransaction(context.Background(), batch, nil)
-	handle(err)
+	handleErr(err)
 	fmt.Println(resp)
 }
 
 func query() {
 	sc, err := aztables.NewServiceClientFromConnectionString("DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;", nil)
-	handle(err)
+	handleErr(err)
 	client := sc.NewClient("TestTable")
 
 	options := &aztables.ListEntitiesOptions{
@@ -140,26 +72,54 @@ func query() {
 	pager := client.List(options)
 	for pager.NextPage(context.Background()) {
 		resp := pager.PageResponse()
-		fmt.Printf("Received: %v entitiesn", len(resp.Entities))
-
 		for _, entity := range resp.Entities {
 			var myEntity aztables.EDMEntity
 			err = json.Unmarshal(entity, &myEntity)
-			handle(err)
+			handleErr(err)
 			fmt.Println(myEntity)
 		}
 	}
 
 	err = pager.Err()
-	handle(err)
+	handleErr(err)
 }
 
-func generateUuid() string {
-	id := uuid.New()
-	return id.String()
+func generateEntities() [][]byte {
+	uuid := uuid.New().String()
+
+	var entities []aztables.EDMEntity
+	entities = append(entities, aztables.EDMEntity{
+		Entity: aztables.Entity{
+			PartitionKey: uuid,
+			RowKey:       "rkey1",
+		},
+		Properties: map[string]interface{}{
+			"product": "product1",
+			"price":   5.00,
+		},
+	})
+
+	entities = append(entities, aztables.EDMEntity{
+		Entity: aztables.Entity{
+			PartitionKey: uuid,
+			RowKey:       "rkey2",
+		},
+		Properties: map[string]interface{}{
+			"product": "product1",
+			"price":   5.00,
+		},
+	})
+
+	var response [][]byte
+	for _, v := range entities {
+		e, err := json.Marshal(v)
+		handleErr(err)
+		response = append(response, e)
+	}
+	return response
 }
 
-func handle(err error) {
+func handleErr(err error) {
 	if err != nil {
 		panic(err)
 	}
