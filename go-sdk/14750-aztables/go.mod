@@ -3,12 +3,12 @@ module playground
 go 1.17
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0
 	github.com/Azure/azure-sdk-for-go/sdk/data/aztables v0.4.0
 	github.com/Azure/go-autorest/autorest/to v0.4.0
 )
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v0.20.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v0.8.1 // indirect
 	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
