@@ -16,7 +16,7 @@ import (
 func main() {
 	// add()
 	insertBatch()
-	// query()
+	query()
 }
 
 func add() {
